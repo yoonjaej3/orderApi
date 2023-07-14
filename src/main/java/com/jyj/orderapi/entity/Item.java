@@ -1,27 +1,33 @@
 package com.jyj.orderapi.entity;
 
-import com.jyj.orderapi.utils.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Item extends BaseEntity {
+public class Item {
     @Id
     @GeneratedValue
     @Column(name = "item_id")
     private Long id;
 
-    private String name;
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private final List<OrderItem> orderItems = new ArrayList<>();
 
-    private int price;
+    private String name;//상품명
 
-    private int stockQuantity;
+    private int price;//상품가격
+
+    private int stockQuantity;//상품수량
+
+    public void order(int num) {
+        this.stockQuantity -= num;
+    }
+
 }
