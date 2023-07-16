@@ -17,33 +17,61 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Orders {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long id;
 
     private String orderNo; //주문번호
 
-    private String custName;
+    private String custName; //고객명
 
-    private String phoneNumber;
+    private String phoneNumber; //고객휴대폰번호
 
     private String address; //배송주소
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private final List<OrderItem> orderItems = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status; //주문상태
 
-    private final LocalDateTime orderDate = LocalDateTime.now(); //주문날짜
+    private LocalDateTime orderDate; //주문날짜
+
+    public static Orders createOrder(OrderBasicInfo orderBasicInfo, List<OrderItem> orderItems) {
+
+        Orders order = Orders.builder()
+                .custName(orderBasicInfo.getCustName())
+                .phoneNumber(orderBasicInfo.getPhoneNumber())
+                .address(orderBasicInfo.getAddress())
+                .status(basicStatus())
+                .orderDate(LocalDateTime.now())
+                .build();
+
+        order.makeOrderNo();
+        order.addOrderItem(orderItems);
+
+        return order;
+    }
+
+    public void addOrderItem(List<OrderItem> orderItems) {
+
+       List<OrderItem> orderItemList = new ArrayList<>();
+
+        for (OrderItem orderItem : orderItems) {
+            orderItemList.add(orderItem);
+            orderItem.setOrder(this);
+        }
+
+        this.orderItems = orderItemList;
+
+    }
 
     public void makeOrderNo() {
         long orderId = Optional.ofNullable(this.id).orElse(0L);
-        this.orderNo = orderDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "#" + String.format("%05d", orderId + 1);
+        this.orderNo = this.orderDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "#" + String.format("%05d", orderId + 1);
     }
 
-    public void basicStatus() {
-        this.status = OrderStatus.PREPARING;
+    public static OrderStatus basicStatus() {
+        return OrderStatus.PREPARING;
     }
-
 }

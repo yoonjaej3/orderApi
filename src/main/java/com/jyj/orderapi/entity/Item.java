@@ -1,5 +1,6 @@
 package com.jyj.orderapi.entity;
 
+import com.jyj.orderapi.exception.NotEnoughStockException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
 
@@ -28,6 +29,9 @@ public class Item {
 
     public void order(int num) {
         this.stockQuantity -= num;
-    }
 
+        if (stockQuantity < 0) {
+            throw new NotEnoughStockException();
+        }
+    }
 }

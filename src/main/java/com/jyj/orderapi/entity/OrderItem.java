@@ -13,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
     private Long id;
 
@@ -29,4 +29,19 @@ public class OrderItem {
 
     private int count; //주문수량
 
+    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
+
+        item.order(count);
+
+        return OrderItem.builder()
+                .item(item)
+                .orderPrice(orderPrice)
+                .count(count)
+                .build();
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+
+    }
 }

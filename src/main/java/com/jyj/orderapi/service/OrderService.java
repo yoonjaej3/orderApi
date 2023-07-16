@@ -1,11 +1,8 @@
 package com.jyj.orderapi.service;
 
-import com.jyj.orderapi.entity.Item;
-import com.jyj.orderapi.entity.OrderItem;
-import com.jyj.orderapi.entity.Orders;
-import com.jyj.orderapi.request.OrderAddRequestDto;
+import com.jyj.orderapi.entity.*;
 import com.jyj.orderapi.request.OrderSearchRequestDto;
-import com.jyj.orderapi.response.OrderSearchResponse;
+import com.jyj.orderapi.response.OrderSearchResponseDto;
 import com.jyj.orderapi.respository.ItemRepository;
 import com.jyj.orderapi.respository.OrderItemRepository;
 import com.jyj.orderapi.respository.OrderRepository;
@@ -14,12 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -27,37 +24,31 @@ public class OrderService {
     private final ItemRepository itemRepository;
 
     //TODO : 주문조회
-    List<OrderSearchResponse> getOrders(OrderSearchRequestDto orderSearchRequest) {
-        return null;
+    public List<OrderSearchResponseDto> findOrders(OrderSearchRequestDto orderSearchRequestDto) {
+        return orderRepository.getOrderList(orderSearchRequestDto.getCustName());
     }
 
     //TODO : 주문생성
     @Transactional
-    public Long saveOrders(OrderAddRequestDto orderAddRequestDto) {
+    public Long saveOrders(OrderBasicInfo orderBasicInfo, List<OrderItemInfo> orderItemInfos) {
 
-        Orders order = Orders.builder()
-                .custName(orderAddRequestDto.getCustName())
-                .phoneNumber(orderAddRequestDto.getPhoneNumber())
-                .address(orderAddRequestDto.getAddress())
-                .build();
+        List<OrderItem> orderItems = new ArrayList<>();
 
-        order.makeOrderNo();
-        order.basicStatus();
+        for (OrderItemInfo orderItemInfo : orderItemInfos) {
+
+            Item item = itemRepository.getById(orderItemInfo.getItemId());
+            int count = orderItemInfo.getCount();
+            int totalPrice = item.getPrice() * count;
+
+            OrderItem orderItem = OrderItem.createOrderItem(item, totalPrice, count);
+            orderItems.add(orderItem);
+        }
+
+        Orders order = Orders.createOrder(orderBasicInfo, orderItems);
 
         orderRepository.save(order);
 
-
-        Item item = itemRepository.getById(orderAddRequestDto.getItemId());
-
-        OrderItem orderItem = OrderItem.builder()
-                .item(item)
-                .order(order)
-                .orderPrice(item.getPrice() * orderAddRequestDto.getCount())
-                .count(orderAddRequestDto.getCount())
-                .build();
-
         return order.getId();
-
     }
 
     //TODO : 주문취소

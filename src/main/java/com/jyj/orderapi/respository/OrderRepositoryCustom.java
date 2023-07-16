@@ -1,10 +1,10 @@
 package com.jyj.orderapi.respository;
 
 import com.jyj.orderapi.request.OrderSearchRequestDto;
-import com.jyj.orderapi.response.OrderSearchResponse;
+import com.jyj.orderapi.response.OrderSearchResponseDto;
 
 import java.util.List;
 
 public interface OrderRepositoryCustom {
-    List<OrderSearchResponse> getOrderList(OrderSearchRequestDto orderSearchRequest);
+    List<OrderSearchResponseDto> getOrderList(String custName);
 }

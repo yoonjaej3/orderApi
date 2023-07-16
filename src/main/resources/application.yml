@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/orderApi
+    url: jdbc:h2:tcp://localhost/~/orderApi;MODE=MySQL
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -13,9 +13,11 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-        default_batch_fetch_size: 1000 #최적화 옵션
     defer-datasource-initialization: true
 
+  sql:
+    init:
+      mode: always
 
 logging.level:
   org.hibernate.SQL: debug
