@@ -10,6 +10,15 @@
 - QueryDSL
 - Junit5
 
+### 테이블 관계
+![img.png](img.png)
+
+### 테스트코드
+- OrderServiceSaveTest
+- OrderServiceCancelTest
+- OrderServiceUpdateTest
+
+
 ### API
 #### [POST] /orders/register
 - 요청
