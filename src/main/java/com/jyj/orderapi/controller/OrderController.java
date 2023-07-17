@@ -1,15 +1,13 @@
 package com.jyj.orderapi.controller;
 
-import com.jyj.orderapi.request.OrderAddRequestDto;
+import com.jyj.orderapi.request.OrderRequestDto;
 import com.jyj.orderapi.request.OrderSearchRequestDto;
 import com.jyj.orderapi.response.OrderSearchResponseDto;
-import com.jyj.orderapi.respository.ItemRepository;
 import com.jyj.orderapi.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,27 +17,36 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    //TODO : 주문조회
-    //주문 조회
     @PostMapping("/orders")
     public List<OrderSearchResponseDto> orderList(@RequestBody OrderSearchRequestDto orderSearchRequestDto) {
 
         List<OrderSearchResponseDto> orders = orderService.findOrders(orderSearchRequestDto);
 
         return orders;
-
     }
 
-    //TODO : 주문생성
     @Transactional
     @PostMapping("/orders/register")
-    public void addOder(@RequestBody OrderAddRequestDto orderAddRequestDto) {
+    public ResponseEntity<String> addOder(@RequestBody OrderRequestDto orderRequestDto) {
+        orderService.saveOrders(orderRequestDto.getOrderBasicInfo(), orderRequestDto.getOrderItemInfos());
 
-        orderService.saveOrders(orderAddRequestDto.getOrderBasicInfo(), orderAddRequestDto.getOrderItemInfos());
+        return ResponseEntity.ok("Order created successfully");
     }
 
-    //TODO : 주문취소
+    @Transactional
+    @PutMapping("/orders/{orderId}/cancel")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
+        orderService.cancelOrders(orderId);
 
-    //TODO : 주문수정
+        return ResponseEntity.ok("Order cancelled successfully");
+    }
+
+    @Transactional
+    @PutMapping("/orders/{orderId}")
+    public ResponseEntity<String> updateOrder(@PathVariable Long orderId, @RequestBody OrderRequestDto orderRequestDto) {
+        orderService.updateOrders(orderId, orderRequestDto.getOrderBasicInfo());
+
+        return ResponseEntity.ok("Order updated successfully");
+    }
 
 }

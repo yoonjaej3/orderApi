@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderAddRequestDto {
+public class OrderRequestDto {
 
     private OrderBasicInfo orderBasicInfo;
     private List<OrderItemInfo> orderItemInfos;

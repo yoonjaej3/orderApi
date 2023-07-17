@@ -34,4 +34,8 @@ public class Item {
             throw new NotEnoughStockException();
         }
     }
+
+    public void cancel(int num) {
+        this.stockQuantity += num;
+    }
 }

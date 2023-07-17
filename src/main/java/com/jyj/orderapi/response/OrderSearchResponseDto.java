@@ -18,9 +18,13 @@ public class OrderSearchResponseDto {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
     private final LocalDateTime orderDate;
+    private final String itemName;
+    private final int totalPrice;
+    private final int count;
 
     @QueryProjection
-    public OrderSearchResponseDto(Long id, String orderNo, String custName, String phoneNumber, String address, OrderStatus orderStatus, LocalDateTime orderDate) {
+    public OrderSearchResponseDto(Long id, String orderNo, String custName, String phoneNumber, String address, OrderStatus orderStatus
+            , LocalDateTime orderDate, String itemName, int count, int totalPrice) {
         this.orderid = id;
         this.orderNo = orderNo;
         this.custName = custName;
@@ -28,6 +32,9 @@ public class OrderSearchResponseDto {
         this.address = address;
         this.orderStatus = orderStatus;
         this.orderDate = orderDate;
+        this.itemName = itemName;
+        this.count = count;
+        this.totalPrice = totalPrice;
 
     }
 

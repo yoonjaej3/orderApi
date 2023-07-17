@@ -11,5 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderSearchRequestDto {
     String custName;
+    String orderNo;
+    String status;
+    String startDate;
 
 }

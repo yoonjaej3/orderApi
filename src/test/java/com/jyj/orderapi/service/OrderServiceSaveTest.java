@@ -8,19 +8,17 @@ import com.jyj.orderapi.entity.enums.OrderStatus;
 import com.jyj.orderapi.exception.NotEnoughStockException;
 import com.jyj.orderapi.respository.ItemRepository;
 import com.jyj.orderapi.respository.OrderRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-class OrderServiceTest {
+class OrderServiceSaveTest {
 
     @Autowired
     OrderService orderService;
@@ -86,15 +84,18 @@ class OrderServiceTest {
 
         //then
         Orders order = orderRepository.getById(orderId);
+        String expectedOrderNo = order.getOrderDate().format(DateTimeFormatter.ISO_LOCAL_DATE) + "#주윤재#00001";
+
 
         Assertions.assertEquals(OrderStatus.PREPARING, order.getStatus(), "상품 주문시 상태는 PREPARING");
         Assertions.assertEquals(5, item01.getStockQuantity(), "상품 주문시 주문 수량만큼 count 감소");
+        Assertions.assertEquals(expectedOrderNo, order.getOrderNo(), "주문번호는 YYYY-MM-DD#고객명#고객주문횟수");
 
     }
 
     @Test
     @Transactional
-    @DisplayName("재고 부족 예외 발생")
+    @DisplayName("재고 부족 NotEnoughStockException 발생")
     void saveOrdersException01() {
         //given
         OrderBasicInfo orderBasicInfo = OrderBasicInfo.builder()

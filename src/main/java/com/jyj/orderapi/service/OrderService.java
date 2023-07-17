@@ -1,6 +1,7 @@
 package com.jyj.orderapi.service;
 
 import com.jyj.orderapi.entity.*;
+import com.jyj.orderapi.exception.NotFoundOrderException;
 import com.jyj.orderapi.request.OrderSearchRequestDto;
 import com.jyj.orderapi.response.OrderSearchResponseDto;
 import com.jyj.orderapi.respository.ItemRepository;
@@ -23,19 +24,63 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ItemRepository itemRepository;
 
-    //TODO : 주문조회
     public List<OrderSearchResponseDto> findOrders(OrderSearchRequestDto orderSearchRequestDto) {
-        return orderRepository.getOrderList(orderSearchRequestDto.getCustName());
+        log.debug("Find orders: {}", orderSearchRequestDto);
+
+        List<OrderSearchResponseDto> orderList = orderRepository.getOrderList(orderSearchRequestDto.getOrderNo(), orderSearchRequestDto.getCustName()
+                , orderSearchRequestDto.getStatus(), orderSearchRequestDto.getStartDate());
+
+        log.info("Orders saved successfully");
+
+        return orderList;
     }
 
-    //TODO : 주문생성
     @Transactional
     public Long saveOrders(OrderBasicInfo orderBasicInfo, List<OrderItemInfo> orderItemInfos) {
+        log.debug("Save orders: {}, {}", orderBasicInfo, orderItemInfos);
 
+        List<OrderItem> orderItems = createOrderItems(orderItemInfos);
+        Orders order = Orders.createOrder(orderBasicInfo, orderItems);
+        orderRepository.save(order);
+
+        int custNameCount = orderRepository.findByCustName(order.getCustName()).size();
+        order.makeOrderNo(custNameCount);
+
+        log.info("Orders saved successfully");
+
+        return order.getId();
+    }
+
+    @Transactional
+    public Long cancelOrders(Long orderId) {
+        log.debug("Cancel orderId: {}", orderId);
+
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(NotFoundOrderException::new);
+        order.cancel(order);
+
+        log.info("Orders cancel successfully");
+
+        return order.getId();
+    }
+
+    @Transactional
+    public Long updateOrders(Long orderId, OrderBasicInfo orderBasicInfo) {
+        log.debug("Update orderId: {}", orderId);
+
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(NotFoundOrderException::new);
+        order.updateOrder(orderBasicInfo);
+
+        log.info("Orders update successfully");
+
+        return order.getId();
+    }
+
+    private List<OrderItem> createOrderItems(List<OrderItemInfo> orderItemInfos) {
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (OrderItemInfo orderItemInfo : orderItemInfos) {
-
             Item item = itemRepository.getById(orderItemInfo.getItemId());
             int count = orderItemInfo.getCount();
             int totalPrice = item.getPrice() * count;
@@ -43,22 +88,7 @@ public class OrderService {
             OrderItem orderItem = OrderItem.createOrderItem(item, totalPrice, count);
             orderItems.add(orderItem);
         }
-
-        Orders order = Orders.createOrder(orderBasicInfo, orderItems);
-
-        orderRepository.save(order);
-
-        return order.getId();
-    }
-
-    //TODO : 주문취소
-    void cancelOrders(Orders order) {
-
-    }
-
-    //TODO : 주문수정
-    void updateOrders(Orders order) {
-
+        return orderItems;
     }
 
 

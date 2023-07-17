@@ -1,5 +1,7 @@
 package com.jyj.orderapi.entity;
 
+import com.jyj.orderapi.exception.NotEnoughCountException;
+import com.jyj.orderapi.utils.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderItem {
+public class OrderItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
@@ -31,6 +33,9 @@ public class OrderItem {
 
     public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
 
+        if (count < 0) {
+            throw new NotEnoughCountException();
+        }
         item.order(count);
 
         return OrderItem.builder()
