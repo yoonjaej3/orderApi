@@ -41,7 +41,8 @@ Order created successfully
 - 요청
 ```
 {
-    "custName" : "주윤재"
+    "custName" : "주윤재",
+    "startDate" : "2023-07-17"
 }
 ```
 - 응답
