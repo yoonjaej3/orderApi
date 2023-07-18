@@ -30,7 +30,7 @@ public class OrderService {
         List<OrderSearchResponseDto> orderList = orderRepository.getOrderList(orderSearchRequestDto.getOrderNo(), orderSearchRequestDto.getCustName()
                 , orderSearchRequestDto.getStatus(), orderSearchRequestDto.getStartDate());
 
-        log.info("Orders saved successfully");
+        log.info("Orders search successfully");
 
         return orderList;
     }
