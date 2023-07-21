@@ -1,5 +1,6 @@
 package com.jyj.api.order.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jyj.api.order.entity.enums.OrderStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class OrderSearchResponseDto {
     private final String address;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private final LocalDateTime orderDate;
     private final String itemName;
     private final int totalPrice;
