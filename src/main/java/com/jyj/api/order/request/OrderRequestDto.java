@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequestDto {
-
+    private Long orderId;
     private OrderBasicInfo orderBasicInfo;
     private List<OrderItemInfo> orderItemInfos;
 
