@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Slf4j
-public class apiFilter implements Filter {
+public class CustomFilter implements Filter {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
