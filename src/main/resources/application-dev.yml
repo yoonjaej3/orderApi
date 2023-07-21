@@ -6,13 +6,13 @@ spring:
     driver-class-name: org.h2.Driver
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         show_sql: false
-        format_sql: true
+        format_sql: false
     defer-datasource-initialization: true
 
   sql:
@@ -20,5 +20,6 @@ spring:
       mode: always
 
 logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type: DEBUG
+  org.hibernate.type.BasicTypeRegistry: ERROR
