@@ -3,7 +3,7 @@ package com.jyj.api.order.entity;
 import com.jyj.api.order.entity.enums.OrderStatus;
 import com.jyj.api.order.exception.NotCancelOrderException;
 import com.jyj.api.order.exception.NotUpdateOrderException;
-import com.jyj.api.common.configuration.utils.BaseEntity;
+import com.jyj.api.common.utils.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;

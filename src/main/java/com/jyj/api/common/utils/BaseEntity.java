@@ -1,4 +1,4 @@
-package com.jyj.api.common.configuration.utils;
+package com.jyj.api.common.utils;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

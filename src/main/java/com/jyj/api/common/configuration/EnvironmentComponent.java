@@ -12,8 +12,8 @@ import java.util.TimeZone;
 @AllArgsConstructor
 public class EnvironmentComponent {
 
-    private static final String PROJECT_NAME = "api";
-    private static final String VERSION = "0.0.0";
+    public static final String PROJECT_NAME = "api";
+    public static final String VERSION = "0.0.0";
     private final Environment environment;
 
     public void showProject() {
