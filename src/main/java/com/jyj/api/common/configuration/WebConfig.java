@@ -15,7 +15,7 @@ public class WebConfig {
                 FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new CustomFilter());
         filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/*");
+        filterRegistrationBean.addUrlPatterns("/api/*");
         return filterRegistrationBean;
     }
 }
