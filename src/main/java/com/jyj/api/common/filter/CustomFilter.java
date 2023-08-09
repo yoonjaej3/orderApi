@@ -56,17 +56,23 @@ public class CustomFilter implements Filter {
         ZonedDateTime requestDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(requestTime), ZoneId.systemDefault());
         ZonedDateTime responseDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(responseTime), ZoneId.systemDefault());
 
-        String logMessage = "{\"threadId\": \"" + threadId + "\", " +
-                "\"method\": \"" + wrappedRequest.getMethod() + "\", " +
-                "\"url\": \"" + wrappedRequest.getRequestURI() + "\", " +
-                "\"userAgent\": \"" + wrappedRequest.getHeader("User-Agent") + "\", " +
-                "\"host\": \"" + wrappedRequest.getHeader("host") + "\", " +
-                "\"clientIp\": \"" + wrappedRequest.getRemoteAddr() + "\", " +
-                "\"requestParams\": " + requestParams + ", " +
-                "\"responseParams\": " + responseParams + ", " +
-                "\"requestAt\": \"" + requestDateTime.format(dateFormatter) + "\"," +
-                "\"responseAt\": \"" + responseDateTime.format(dateFormatter) + "\"," +
-                "\"elapsedTimeInMS\": " + (responseTime - requestTime) + "}";
+        StringBuilder logMessageBuilder = new StringBuilder();
+        logMessageBuilder.append("{")
+                .append("\"threadId\": \"").append(threadId).append("\", ")
+                .append("\"method\": \"").append(wrappedRequest.getMethod()).append("\", ")
+                .append("\"url\": \"").append(wrappedRequest.getRequestURI()).append("\", ")
+                .append("\"userAgent\": \"").append(wrappedRequest.getHeader("User-Agent")).append("\", ")
+                .append("\"host\": \"").append(wrappedRequest.getHeader("host")).append("\", ")
+                .append("\"clientIp\": \"").append(wrappedRequest.getRemoteAddr()).append("\", ")
+                .append("\"requestParams\": ").append(requestParams).append(", ")
+                .append("\"responseParams\": ").append(responseParams).append(", ")
+                .append("\"requestAt\": \"").append(requestDateTime.format(dateFormatter)).append("\",")
+                .append("\"responseAt\": \"").append(responseDateTime.format(dateFormatter)).append("\",")
+                .append("\"elapsedTimeInMS\": ").append(responseTime - requestTime)
+                .append("}");
+
+        String logMessage = logMessageBuilder.toString();
+
 
         log.info(logMessage);
     }
