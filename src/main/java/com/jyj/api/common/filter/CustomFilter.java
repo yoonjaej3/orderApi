@@ -50,7 +50,7 @@ public class CustomFilter implements Filter {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         String threadId = UUID.randomUUID().toString();
-        String requestParams = objectMapper.writeValueAsString(wrappedRequest.getParameterMap());
+        String requestParams = new String(wrappedRequest.getContentAsByteArray());
         String responseParams = new String(wrappedResponse.getContentAsByteArray());
 
         ZonedDateTime requestDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(requestTime), ZoneId.systemDefault());

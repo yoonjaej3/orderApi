@@ -1,12 +1,12 @@
 package com.jyj.api.order.controller;
 
 import com.jyj.api.common.response.GenericResponse;
+import com.jyj.api.common.validation.ValidationSequence;
 import com.jyj.api.order.request.OrderRequestDto;
 import com.jyj.api.order.request.OrderSearchRequestDto;
 import com.jyj.api.order.response.OrderSearchResponseDto;
 import com.jyj.api.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ public class OrderController {
 
     @Transactional
     @PostMapping("/orders")
-    public GenericResponse<String> addOder(@Validated(Validated.class) @RequestBody OrderRequestDto orderRequestDto) {
+    public GenericResponse<String> addOder(@Validated(ValidationSequence.class) @RequestBody OrderRequestDto orderRequestDto) {
 
         return new GenericResponse<>(
                 "주문 생성 완료",
