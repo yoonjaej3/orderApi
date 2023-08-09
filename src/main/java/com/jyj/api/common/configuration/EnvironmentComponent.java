@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.util.TimeZone;
+import java.time.ZoneId;
 
 @Slf4j
 @Component
@@ -22,7 +22,7 @@ public class EnvironmentComponent {
         log.info("  PROJECT NAME: {}", PROJECT_NAME);
         log.info("  VERSION: {}", VERSION);
         log.info("  PROFILE: {}", getProperties());
-        log.info("  TIME ZONE: {}", TimeZone.getDefault().toZoneId());
+        log.info("  TIME ZONE: {}", ZoneId.systemDefault());
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         log.info("");
     }
