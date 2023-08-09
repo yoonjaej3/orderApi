@@ -14,5 +14,4 @@ public class OrderSearchRequestDto {
     String orderNo;
     String status;
     String startDate;
-
 }
