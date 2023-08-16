@@ -1,7 +1,7 @@
 package com.jyj.api.order.exception.order;
 
 public class NotCancelOrderException extends RuntimeException {
-    private static final String MESSAGE = "준비 중일때만 주문취소 할 수 있습니다.";
+    private static final String MESSAGE = "You can only cancel an order when it's in preparation.";
 
     public NotCancelOrderException() {
         super(MESSAGE);
