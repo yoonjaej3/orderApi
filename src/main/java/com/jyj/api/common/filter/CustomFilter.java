@@ -14,11 +14,10 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Slf4j
 public class CustomFilter implements Filter {
-    static String threadId = UUID.randomUUID().toString();
+    static String threadId;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -31,6 +30,7 @@ public class CustomFilter implements Filter {
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
         try {
+            threadId = Thread.currentThread().getName();
             MDC.put("threadId", threadId);
 
             long requestTime = Instant.now().toEpochMilli();
