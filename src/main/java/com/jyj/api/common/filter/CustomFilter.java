@@ -1,7 +1,6 @@
 package com.jyj.api.common.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -19,6 +18,8 @@ import java.util.UUID;
 
 @Slf4j
 public class CustomFilter implements Filter {
+    static String threadId = UUID.randomUUID().toString();
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -29,10 +30,9 @@ public class CustomFilter implements Filter {
         ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper((HttpServletRequest) request);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
-        String threadId = Long.toString(Thread.currentThread().getId());
-        MDC.put("threadId", threadId);
-
         try {
+            MDC.put("threadId", threadId);
+
             long requestTime = Instant.now().toEpochMilli();
             chain.doFilter(wrappedRequest, wrappedResponse);
             long responseTime = Instant.now().toEpochMilli();
@@ -46,10 +46,8 @@ public class CustomFilter implements Filter {
     }
 
     private static void logMessage(ContentCachingRequestWrapper wrappedRequest, ContentCachingResponseWrapper wrappedResponse, long requestTime, long responseTime) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-        String threadId = UUID.randomUUID().toString();
         String requestParams = new String(wrappedRequest.getContentAsByteArray());
         String responseParams = new String(wrappedResponse.getContentAsByteArray());
 
