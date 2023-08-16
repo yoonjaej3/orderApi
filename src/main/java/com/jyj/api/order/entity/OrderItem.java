@@ -1,6 +1,5 @@
 package com.jyj.api.order.entity;
 
-import com.jyj.api.order.exception.NotEnoughCountException;
 import com.jyj.api.common.utils.BaseEntity;
 import lombok.*;
 
@@ -33,9 +32,6 @@ public class OrderItem extends BaseEntity {
 
     public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
 
-        if (count < 0) {
-            throw new NotEnoughCountException();
-        }
         item.order(count);
 
         return OrderItem.builder()

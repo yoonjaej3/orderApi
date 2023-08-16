@@ -1,6 +1,6 @@
 package com.jyj.api.order.entity;
 
-import com.jyj.api.order.exception.NotEnoughStockException;
+import com.jyj.api.order.exception.Item.NotEnoughStockException;
 import lombok.*;
 
 import javax.persistence.*;

@@ -5,7 +5,7 @@ import com.jyj.api.order.entity.Item;
 import com.jyj.api.order.entity.OrderBasicInfo;
 import com.jyj.api.order.entity.Orders;
 import com.jyj.api.order.entity.enums.OrderStatus;
-import com.jyj.api.order.exception.NotUpdateOrderException;
+import com.jyj.api.order.exception.order.NotUpdateOrderException;
 import com.jyj.api.order.respository.ItemRepository;
 import com.jyj.api.order.respository.OrderRepository;
 import org.junit.jupiter.api.Assertions;

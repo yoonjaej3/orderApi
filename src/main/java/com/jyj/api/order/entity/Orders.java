@@ -1,8 +1,8 @@
 package com.jyj.api.order.entity;
 
 import com.jyj.api.order.entity.enums.OrderStatus;
-import com.jyj.api.order.exception.NotCancelOrderException;
-import com.jyj.api.order.exception.NotUpdateOrderException;
+import com.jyj.api.order.exception.order.NotCancelOrderException;
+import com.jyj.api.order.exception.order.NotUpdateOrderException;
 import com.jyj.api.common.utils.BaseEntity;
 import lombok.*;
 

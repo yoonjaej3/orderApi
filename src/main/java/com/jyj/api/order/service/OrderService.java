@@ -1,7 +1,6 @@
 package com.jyj.api.order.service;
 
 import com.jyj.api.order.entity.*;
-import com.jyj.api.order.exception.NotFoundOrderException;
 import com.jyj.api.order.request.OrderSearchRequestDto;
 import com.jyj.api.order.response.OrderSearchResponseDto;
 import com.jyj.api.order.respository.ItemRepository;
@@ -12,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +30,6 @@ public class OrderService {
         List<OrderSearchResponseDto> orderList = orderRepository.getOrderList(orderSearchRequestDto.getOrderNo(), orderSearchRequestDto.getCustName()
                 , orderSearchRequestDto.getStatus(), orderSearchRequestDto.getStartDate());
 
-        log.info("Orders search successfully");
-
         return orderList;
     }
 
@@ -46,8 +44,6 @@ public class OrderService {
         int custNameCount = orderRepository.findByCustName(order.getCustName()).size();
         order.makeOrderNo(custNameCount);
 
-        log.info("Orders saved successfully");
-
         return order.getId();
     }
 
@@ -56,10 +52,8 @@ public class OrderService {
         log.debug("Cancel orderId: {}", orderId);
 
         Orders order = orderRepository.findById(orderId)
-                .orElseThrow(NotFoundOrderException::new);
+                .orElseThrow(() -> new EntityNotFoundException("OrderId " + orderId + " not found"));
         order.cancel(order);
-
-        log.info("Orders cancel successfully");
 
         return order.getId();
     }
@@ -69,10 +63,8 @@ public class OrderService {
         log.debug("Update orderId: {}", orderId);
 
         Orders order = orderRepository.findById(orderId)
-                .orElseThrow(NotFoundOrderException::new);
+                .orElseThrow(() -> new EntityNotFoundException("OrderId " + orderId + " not found"));
         order.updateOrder(orderBasicInfo);
-
-        log.info("Orders update successfully");
 
         return order.getId();
     }

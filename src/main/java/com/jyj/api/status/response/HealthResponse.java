@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class HealthResponse {
     private String name;
     private String version;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "systemDefault")
     private LocalDateTime timestamp;
 
     public HealthResponse() {

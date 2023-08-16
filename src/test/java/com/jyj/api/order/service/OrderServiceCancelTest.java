@@ -1,12 +1,11 @@
 package com.jyj.api.order.service;
 
 import com.jyj.api.order.entity.OrderItem;
-import com.jyj.api.order.exception.NotCancelOrderException;
+import com.jyj.api.order.exception.order.NotCancelOrderException;
 import com.jyj.api.order.respository.ItemRepository;
 import com.jyj.api.order.entity.Item;
 import com.jyj.api.order.entity.Orders;
 import com.jyj.api.order.entity.enums.OrderStatus;
-import com.jyj.api.order.exception.NotFoundOrderException;
 import com.jyj.api.order.respository.OrderRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
