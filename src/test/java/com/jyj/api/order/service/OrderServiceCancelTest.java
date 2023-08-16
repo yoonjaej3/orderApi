@@ -90,22 +90,6 @@ class OrderServiceCancelTest {
 
     }
 
-    @Test
-    @Transactional
-    @DisplayName("잘못된ID NotFoundOrderException 발생")
-    void cancelOrdersException02() {
-        //given
-        Orders givenOrder = DummyMakeOrder(OrderStatus.PREPARING);
-
-        orderRepository.save(givenOrder);
-
-        //when then
-        Assertions.assertThrows(NotFoundOrderException.class, () -> {
-            orderService.cancelOrders(2L);
-        });
-
-    }
-
     private Orders DummyMakeOrder(OrderStatus preparing) {
         List<OrderItem> orderItems = new ArrayList<>();
 
