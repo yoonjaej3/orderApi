@@ -66,7 +66,8 @@ public class CustomFilter implements Filter {
                 .append("\"responseParams\": ").append(responseParams).append(", ")
                 .append("\"requestAt\": \"").append(requestDateTime.format(dateFormatter)).append("\",")
                 .append("\"responseAt\": \"").append(responseDateTime.format(dateFormatter)).append("\",")
-                .append("\"elapsedTimeInMS\": ").append(responseTime - requestTime)
+                .append("\"elapsedTimeInMS\": ").append(responseTime - requestTime).append("\",")
+                .append("\"status\": ").append(wrappedResponse.getStatus())
                 .append("}");
 
         String logMessage = logMessageBuilder.toString();
