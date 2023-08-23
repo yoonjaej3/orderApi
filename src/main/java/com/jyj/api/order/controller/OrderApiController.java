@@ -29,17 +29,12 @@ public class OrderApiController {
     private final OrderService orderService;
 
 
-
     @GetMapping("/orders")
-    public GenericResponse<List<OrderSearchResponseDto>> orderList(@RequestParam(required = false) String custName,
-                                                                   @RequestParam(required = false) String orderNo,
-                                                                   @RequestParam(required = false) String status,
-                                                                   @RequestParam(required = false) String startDate) {
+    public GenericResponse<List<OrderSearchResponseDto>> orderList(@ModelAttribute OrderSearchRequestDto orderSearchRequestDto) {
 
-        OrderSearchRequestDto orderSearchRequestDto = new OrderSearchRequestDto(custName, orderNo, status, startDate);
-        List<OrderSearchResponseDto> orders = orderService.findOrders(orderSearchRequestDto);
-
-        return new GenericResponse<>(FIND_ORDER_MESSAGE, orders);
+        return new GenericResponse<>(
+                FIND_ORDER_MESSAGE, orderService.findOrders(orderSearchRequestDto)
+        );
     }
 
     @PostMapping("/orders")
