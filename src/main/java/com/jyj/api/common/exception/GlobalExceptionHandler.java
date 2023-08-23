@@ -2,6 +2,8 @@ package com.jyj.api.common.exception;
 
 import com.jyj.api.common.response.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public ApiErrorResponse Exception(Exception exception, HttpServletRequest request) {
+    public ApiErrorResponse handleException(Exception exception, HttpServletRequest request) {
         log.error(exception.getMessage(), exception);
 
         return ApiErrorResponse.builder()
@@ -38,7 +40,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ApiErrorResponse MethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
+    public ApiErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
         log.error(exception.getMessage(), exception);
 
         Map<String, String> errors = new HashMap<>();
@@ -60,7 +62,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ApiErrorResponse NotReadableExceptionResponse(HttpMessageNotReadableException exception, HttpServletRequest request) {
+    public ApiErrorResponse handleNotReadableExceptionResponse(HttpMessageNotReadableException exception, HttpServletRequest request) {
         log.error(exception.getMessage(), exception);
 
         return ApiErrorResponse.builder()

@@ -1,10 +1,11 @@
-package com.jyj.api.order.exception;
+package com.jyj.api.common.exception;
 
-import com.jyj.api.common.exception.GlobalExceptionHandler;
 import com.jyj.api.common.response.ApiErrorResponse;
 import com.jyj.api.order.exception.order.NotCancelOrderException;
 import com.jyj.api.order.exception.order.NotUpdateOrderException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,7 +17,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Slf4j
 @RestControllerAdvice
-public class CustomExceptionHandler extends GlobalExceptionHandler {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class OrderExceptionHandler extends GlobalExceptionHandler {
     @ExceptionHandler(NotCancelOrderException.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ApiErrorResponse handleNotCancelOrderException(NotCancelOrderException exception, HttpServletRequest request) {

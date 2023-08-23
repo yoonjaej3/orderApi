@@ -1,6 +1,7 @@
 package com.jyj.api.common.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jyj.api.common.response.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -37,7 +38,8 @@ public class CustomFilter implements Filter {
             chain.doFilter(wrappedRequest, wrappedResponse);
             long responseTime = Instant.now().toEpochMilli();
 
-            logMessage(wrappedRequest, wrappedResponse, requestTime, responseTime);
+            LogMessage logMessage = getLogMessage(wrappedRequest, wrappedResponse, requestTime, responseTime);
+            log.info(logMessage.toLogString());
 
         } finally {
             wrappedResponse.copyBodyToResponse();
@@ -45,7 +47,7 @@ public class CustomFilter implements Filter {
         }
     }
 
-    private static void logMessage(ContentCachingRequestWrapper wrappedRequest, ContentCachingResponseWrapper wrappedResponse, long requestTime, long responseTime) throws JsonProcessingException {
+    private static LogMessage getLogMessage(ContentCachingRequestWrapper wrappedRequest, ContentCachingResponseWrapper wrappedResponse, long requestTime, long responseTime) throws JsonProcessingException {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         String requestParams = new String(wrappedRequest.getContentAsByteArray());
@@ -54,25 +56,20 @@ public class CustomFilter implements Filter {
         ZonedDateTime requestDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(requestTime), ZoneId.systemDefault());
         ZonedDateTime responseDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(responseTime), ZoneId.systemDefault());
 
-        StringBuilder logMessageBuilder = new StringBuilder();
-        logMessageBuilder.append("{")
-                .append("\"threadId\": \"").append(threadId).append("\", ")
-                .append("\"method\": \"").append(wrappedRequest.getMethod()).append("\", ")
-                .append("\"url\": \"").append(wrappedRequest.getRequestURI()).append("\", ")
-                .append("\"userAgent\": \"").append(wrappedRequest.getHeader("User-Agent")).append("\", ")
-                .append("\"host\": \"").append(wrappedRequest.getHeader("host")).append("\", ")
-                .append("\"clientIp\": \"").append(wrappedRequest.getRemoteAddr()).append("\", ")
-                .append("\"requestParams\": ").append(requestParams).append(", ")
-                .append("\"responseParams\": ").append(responseParams).append(", ")
-                .append("\"requestAt\": \"").append(requestDateTime.format(dateFormatter)).append("\",")
-                .append("\"responseAt\": \"").append(responseDateTime.format(dateFormatter)).append("\",")
-                .append("\"elapsedTimeInMS\": ").append(responseTime - requestTime).append("\",")
-                .append("}");
+        return LogMessage.builder()
+                .threadId(threadId)
+                .method(wrappedRequest.getMethod())
+                .url(wrappedRequest.getRequestURI())
+                .userAgent(wrappedRequest.getHeader("User-Agent"))
+                .host(wrappedRequest.getHeader("host"))
+                .clientIp(wrappedRequest.getRemoteAddr())
+                .requestParams(requestParams)
+                .responseParams(responseParams)
+                .requestAt(requestDateTime.format(dateFormatter))
+                .responseAt(responseDateTime.format(dateFormatter))
+                .elapsedTimeInMS(responseTime - requestTime)
+                .build();
 
-        String logMessage = logMessageBuilder.toString();
-
-
-        log.info(logMessage);
     }
 
 
