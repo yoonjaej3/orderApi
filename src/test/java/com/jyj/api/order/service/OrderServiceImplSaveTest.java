@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-class OrderServiceSaveTest {
+class OrderServiceImplSaveTest {
 
     @Autowired
-    OrderService orderService;
+    OrderServiceImpl orderService;
 
     @Autowired
     ItemRepository itemRepository;

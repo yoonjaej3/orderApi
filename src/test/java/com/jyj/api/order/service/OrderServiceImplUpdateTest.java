@@ -1,11 +1,12 @@
 package com.jyj.api.order.service;
 
 import com.jyj.api.order.entity.OrderItem;
-import com.jyj.api.order.exception.order.NotCancelOrderException;
-import com.jyj.api.order.respository.ItemRepository;
 import com.jyj.api.order.entity.Item;
+import com.jyj.api.order.entity.OrderBasicInfo;
 import com.jyj.api.order.entity.Orders;
 import com.jyj.api.order.entity.enums.OrderStatus;
+import com.jyj.api.order.exception.order.NotUpdateOrderException;
+import com.jyj.api.order.respository.ItemRepository;
 import com.jyj.api.order.respository.OrderRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-class OrderServiceCancelTest {
+class OrderServiceImplUpdateTest {
 
     @Autowired
-    OrderService orderService;
+    OrderServiceImpl orderService;
 
     @Autowired
     ItemRepository itemRepository;
@@ -56,36 +57,46 @@ class OrderServiceCancelTest {
 
     @Test
     @Transactional
-    @DisplayName("주문 취소")
-    void cancelOrders() {
+    @DisplayName("주문변경")
+    void updateOrders() {
         //given
         Orders givenOrder = DummyMakeOrder(OrderStatus.PREPARING);
 
-        Long givenId = orderRepository.save(givenOrder).getId();
+        Long givenOrderId = orderRepository.save(givenOrder).getId();
+
+        OrderBasicInfo orderBasicInfo = OrderBasicInfo.builder()
+                .address("저스트코타워")
+                .build();
 
         //when
-        Long orderId = orderService.cancelOrders(givenId);
+        Long orderId = orderService.updateOrders(givenOrderId, orderBasicInfo);
 
         //then
         Orders order = orderRepository.getById(orderId);
 
-        Assertions.assertEquals(OrderStatus.CANCEL, order.getStatus(), "상품 취소시 상태는 CANCEL");
-        Assertions.assertEquals(15, item01.getStockQuantity(), "상품 취소시 취소 수량만큼 count 증가");
+        Assertions.assertEquals("주윤재", order.getCustName(), "주문자명");
+        Assertions.assertEquals("저스트코타워", order.getAddress(), "주소");
+        Assertions.assertEquals("01099999999", order.getPhoneNumber(), "핸드폰번호");
+        Assertions.assertEquals("2023-07-17#주윤재#00001", order.getOrderNo(), "주문번호");
 
     }
 
     @Test
     @Transactional
-    @DisplayName("주문취소 NotCancelOrderException 발생")
-    void cancelOrdersException01() {
+    @DisplayName("주문변경 NotUpdateOrderException 예외발생")
+    void updateOrdersException01() {
         //given
         Orders givenOrder = DummyMakeOrder(OrderStatus.DONE);
 
-        Long givenId = orderRepository.save(givenOrder).getId();
+        Long givenOrderId = orderRepository.save(givenOrder).getId();
+
+        OrderBasicInfo orderBasicInfo = OrderBasicInfo.builder()
+                .address("저스트코타워")
+                .build();
 
         //when then
-        Assertions.assertThrows(NotCancelOrderException.class, () -> {
-            orderService.cancelOrders(givenId);
+        Assertions.assertThrows(NotUpdateOrderException.class, () -> {
+            orderService.updateOrders(givenOrderId, orderBasicInfo);
         });
 
     }

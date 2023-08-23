@@ -2,18 +2,16 @@ package com.jyj.api.order.controller;
 
 import com.jyj.api.common.response.GenericResponse;
 import com.jyj.api.common.validation.ValidationSequence;
-import com.jyj.api.order.exception.order.NotCancelOrderException;
-import com.jyj.api.order.exception.order.NotUpdateOrderException;
 import com.jyj.api.order.request.AddOrderRequestDto;
 import com.jyj.api.order.request.CancelOrderRequestDto;
 import com.jyj.api.order.request.OrderSearchRequestDto;
 import com.jyj.api.order.request.UpdateOrderRequestDto;
-import com.jyj.api.order.response.NotCancelOrderExceptionResponse;
-import com.jyj.api.order.response.NotUpdateOrderExceptionResponse;
+import com.jyj.api.order.response.OrderCancelResponseDto;
+import com.jyj.api.order.response.OrderSaveResponseDto;
 import com.jyj.api.order.response.OrderSearchResponseDto;
+import com.jyj.api.order.response.OrderUpdateResponseDto;
 import com.jyj.api.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class OrderApiController {
+    private static final String FIND_ORDER_MESSAGE = "주문 조회";
+    private static final String SAVE_ORDER_MESSAGE = "주문 저장";
+    private static final String UPDATE_ORDER_MESSAGE = "주문 수정";
+    private static final String CANCEL_ORDER_MESSAGE = "주문 취소";
 
     private final OrderService orderService;
+
+
 
     @GetMapping("/orders")
     public GenericResponse<List<OrderSearchResponseDto>> orderList(@RequestParam(required = false) String custName,
@@ -35,36 +39,30 @@ public class OrderApiController {
         OrderSearchRequestDto orderSearchRequestDto = new OrderSearchRequestDto(custName, orderNo, status, startDate);
         List<OrderSearchResponseDto> orders = orderService.findOrders(orderSearchRequestDto);
 
-        return new GenericResponse<>("Find Orders", orders);
+        return new GenericResponse<>(FIND_ORDER_MESSAGE, orders);
     }
 
-    @Transactional
     @PostMapping("/orders")
-    public GenericResponse<String> saveOder(@Validated(ValidationSequence.class) @RequestBody AddOrderRequestDto addOrderRequestDto) {
+    public GenericResponse<OrderSaveResponseDto> saveOder(@Validated(ValidationSequence.class) @RequestBody AddOrderRequestDto addOrderRequestDto) {
 
         return new GenericResponse<>(
-                "Save Order",
-                "orderID : " + orderService.saveOrders(addOrderRequestDto.getOrderBasicInfo(), addOrderRequestDto.getOrderItemInfos())
+                SAVE_ORDER_MESSAGE, orderService.saveOrders(addOrderRequestDto.getOrderBasicInfo(), addOrderRequestDto.getOrderItemInfos())
         );
     }
 
-    @Transactional
     @PutMapping("/orders")
-    public GenericResponse<String> updateOrder(@Validated(ValidationSequence.class) @RequestBody UpdateOrderRequestDto updateOrderRequestDto) {
+    public GenericResponse<OrderUpdateResponseDto> updateOrder(@Validated(ValidationSequence.class) @RequestBody UpdateOrderRequestDto updateOrderRequestDto) {
 
         return new GenericResponse<>(
-                "Update Order",
-                "orderID : " + orderService.updateOrders(updateOrderRequestDto.getOrderId(), updateOrderRequestDto.getOrderBasicInfo())
+                UPDATE_ORDER_MESSAGE, orderService.updateOrders(updateOrderRequestDto.getOrderId(), updateOrderRequestDto.getOrderBasicInfo())
         );
     }
 
-    @Transactional
     @PatchMapping("/orders")
-    public GenericResponse<String> cancelOrder(@Validated(ValidationSequence.class) @RequestBody CancelOrderRequestDto cancelOrderRequestDto) {
+    public GenericResponse<OrderCancelResponseDto> cancelOrder(@Validated(ValidationSequence.class) @RequestBody CancelOrderRequestDto cancelOrderRequestDto) {
 
         return new GenericResponse<>(
-                "Cancel Order",
-                "orderID : " + orderService.cancelOrders(cancelOrderRequestDto.getOrderId())
+                CANCEL_ORDER_MESSAGE, orderService.cancelOrders(cancelOrderRequestDto.getOrderId())
         );
     }
 
