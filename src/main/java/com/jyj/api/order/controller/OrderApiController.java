@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class OrderController {
+public class OrderApiController {
 
     private final OrderService orderService;
 
@@ -65,22 +65,6 @@ public class OrderController {
         return new GenericResponse<>(
                 "Cancel Order",
                 "orderID : " + orderService.cancelOrders(cancelOrderRequestDto.getOrderId())
-        );
-    }
-
-    @ExceptionHandler(NotCancelOrderException.class)
-    public GenericResponse<NotCancelOrderExceptionResponse> handleNotCancelOrderException(NotCancelOrderException e) {
-
-        return new GenericResponse<>(
-                "NotCancelOrderException", new NotCancelOrderExceptionResponse(e)
-        );
-    }
-
-    @ExceptionHandler(NotUpdateOrderException.class)
-    public GenericResponse<NotUpdateOrderExceptionResponse> handleNotCancelOrderException(NotUpdateOrderException e) {
-
-        return new GenericResponse<>(
-                "NotUpdateOrderException", new NotUpdateOrderExceptionResponse(e)
         );
     }
 
