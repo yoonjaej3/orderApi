@@ -2,6 +2,7 @@ package com.jyj.api.order.service;
 
 import com.jyj.api.order.entity.OrderBasicInfo;
 import com.jyj.api.order.entity.OrderItemInfo;
+import com.jyj.api.order.response.OrderSaveResponseDto;
 import com.jyj.api.order.respository.ItemRepository;
 import com.jyj.api.order.entity.Item;
 import com.jyj.api.order.entity.Orders;
@@ -21,7 +22,7 @@ import java.util.List;
 class OrderServiceImplSaveTest {
 
     @Autowired
-    OrderServiceImpl orderService;
+    OrderService orderService;
 
     @Autowired
     ItemRepository itemRepository;
@@ -80,10 +81,10 @@ class OrderServiceImplSaveTest {
         );
 
         //when
-        Long orderId = orderService.saveOrders(orderBasicInfo, orderItemInfoList);
+        OrderSaveResponseDto orderSaveResponseDto = orderService.saveOrders(orderBasicInfo, orderItemInfoList);
 
         //then
-        Orders order = orderRepository.getById(orderId);
+        Orders order = orderRepository.getById(orderSaveResponseDto.getOrderid());
         String expectedOrderNo = order.getOrderDate().format(DateTimeFormatter.ISO_LOCAL_DATE) + "#주윤재#00001";
 
 

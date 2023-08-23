@@ -1,11 +1,12 @@
 package com.jyj.api.order.service;
 
-import com.jyj.api.order.entity.OrderItem;
 import com.jyj.api.order.entity.Item;
 import com.jyj.api.order.entity.OrderBasicInfo;
+import com.jyj.api.order.entity.OrderItem;
 import com.jyj.api.order.entity.Orders;
 import com.jyj.api.order.entity.enums.OrderStatus;
 import com.jyj.api.order.exception.order.NotUpdateOrderException;
+import com.jyj.api.order.response.OrderUpdateResponseDto;
 import com.jyj.api.order.respository.ItemRepository;
 import com.jyj.api.order.respository.OrderRepository;
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +25,7 @@ import java.util.List;
 class OrderServiceImplUpdateTest {
 
     @Autowired
-    OrderServiceImpl orderService;
+    OrderService orderService;
 
     @Autowired
     ItemRepository itemRepository;
@@ -69,10 +70,10 @@ class OrderServiceImplUpdateTest {
                 .build();
 
         //when
-        Long orderId = orderService.updateOrders(givenOrderId, orderBasicInfo);
+        OrderUpdateResponseDto orderUpdateResponseDto = orderService.updateOrders(givenOrderId, orderBasicInfo);
 
         //then
-        Orders order = orderRepository.getById(orderId);
+        Orders order = orderRepository.getById(orderUpdateResponseDto.getOrderid());
 
         Assertions.assertEquals("주윤재", order.getCustName(), "주문자명");
         Assertions.assertEquals("저스트코타워", order.getAddress(), "주소");

@@ -2,6 +2,7 @@ package com.jyj.api.order.service;
 
 import com.jyj.api.order.entity.OrderItem;
 import com.jyj.api.order.exception.order.NotCancelOrderException;
+import com.jyj.api.order.response.OrderCancelResponseDto;
 import com.jyj.api.order.respository.ItemRepository;
 import com.jyj.api.order.entity.Item;
 import com.jyj.api.order.entity.Orders;
@@ -23,7 +24,7 @@ import java.util.List;
 class OrderServiceImplCancelTest {
 
     @Autowired
-    OrderServiceImpl orderService;
+    OrderService orderService;
 
     @Autowired
     ItemRepository itemRepository;
@@ -64,10 +65,10 @@ class OrderServiceImplCancelTest {
         Long givenId = orderRepository.save(givenOrder).getId();
 
         //when
-        Long orderId = orderService.cancelOrders(givenId);
+        OrderCancelResponseDto orderCancelResponseDto = orderService.cancelOrders(givenId);
 
         //then
-        Orders order = orderRepository.getById(orderId);
+        Orders order = orderRepository.getById(orderCancelResponseDto.getOrderid());
 
         Assertions.assertEquals(OrderStatus.CANCEL, order.getStatus(), "상품 취소시 상태는 CANCEL");
         Assertions.assertEquals(15, item01.getStockQuantity(), "상품 취소시 취소 수량만큼 count 증가");
